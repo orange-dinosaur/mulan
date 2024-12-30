@@ -7,7 +7,7 @@
 <div class="flex h-screen w-screen items-center">
 	<img src={PUBLIC_LANDING_IMAGE} alt="landing" class="h-screen w-2/5 rounded-l-[50px] bg-cover" />
 
-	<div class="flex h-full flex-col px-48">
+	<div class="flex h-full w-full flex-col px-48">
 		<div class="flex w-full items-center justify-end py-12">
 			<Button href="/login" variant="ghost" class="mr-2 text-lg font-bold text-primary"
 				>Login</Button
