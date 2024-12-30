@@ -5,11 +5,7 @@
 </script>
 
 <div class="flex h-screen w-screen items-center">
-	<img
-		src={PUBLIC_LANDING_IMAGE}
-		alt="landing"
-		class="max-h-screen w-auto rounded-l-[50px] bg-cover"
-	/>
+	<img src={PUBLIC_LANDING_IMAGE} alt="landing" class="h-screen w-2/5 rounded-l-[50px] bg-cover" />
 
 	<div class="flex h-full flex-col px-48">
 		<div class="flex w-full items-center justify-end py-12">
