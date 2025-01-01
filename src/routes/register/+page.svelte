@@ -58,7 +58,7 @@
 						class="bg-transparent text-lg outline-none focus:border-b-2 focus:border-b-primary"
 					/>
 				</div>
-				<Button type="submit" class="my-8 w-48 font-bold">Login</Button>
+				<Button type="submit" class="my-8 w-48 font-bold">Register</Button>
 			</div>
 		</form>
 	</div>
