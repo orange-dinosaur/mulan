@@ -27,6 +27,7 @@
 			<a href="/"><img src={logo} alt="logo" class="h-[100px] w-auto" /></a>
 		</div>
 
+		<!-- Form -->
 		<form
 			class="flex w-4/5 flex-col"
 			method="post"
@@ -46,6 +47,7 @@
 				};
 			}}
 		>
+			<!-- Form fields -->
 			<div class="grid gap-2">
 				<div class="grid gap-1">
 					<Label class="sr-only" for="email">Email</Label>
@@ -76,7 +78,13 @@
 						class="bg-transparent outline-none focus:border-b-2 focus:border-b-primary"
 					/>
 				</div>
-				<Button type="submit" class="my-8 w-48 font-bold">
+
+				<a href="/recover-password" class="mb-4 ml-2 mt-2 text-xs text-blue-800 hover:underline"
+					>Forgot your password?</a
+				>
+
+				<!-- Submit button -->
+				<Button type="submit" class="mb-8 w-48 font-bold">
 					{#if isLoading}
 						<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
 					{/if}
@@ -85,6 +93,7 @@
 			</div>
 		</form>
 
+		<!-- Error alert -->
 		{#if form && form?.status != 200}
 			<Alert.Root variant="destructive" class="w-3/5">
 				<CircleAlert class="mr-2 h-4 w-4" />
