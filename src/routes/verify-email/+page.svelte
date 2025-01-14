@@ -3,8 +3,11 @@
 	import { PUBLIC_LANDING_IMAGE } from '$env/static/public';
 	import logo from '$lib/assets/logo.png';
 	import { Button } from '$lib/components/ui/button';
+	import { LoaderCircle } from 'lucide-svelte';
 
 	const { data } = $props();
+
+	let isLoading = $state(false);
 </script>
 
 <div class="flex h-screen w-screen items-center">
@@ -30,7 +33,11 @@
 
 			<Button class="my-8 w-48 font-bold" onclick={() => goto('/login')}>Login</Button>
 		{:else}
-			<p class="mb-2 text-lg text-foreground">{data.data.message}</p>
+			<!-- TODO: Find a way to add a button to resend the verification email -->
+			<p class="mb-2 text-lg text-foreground">There's been a problem validating your email</p>
+			<p class="mb-3 text-base text-foreground">
+				To receive another verification email try to login and follow the instructions
+			</p>
 		{/if}
 	</div>
 </div>
