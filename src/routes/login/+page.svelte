@@ -149,12 +149,12 @@
 			<Alert.Root variant="destructive" class="w-3/5">
 				<CircleAlert class="mr-2 h-4 w-4" />
 				<Alert.Title>Error</Alert.Title>
-				<Alert.Description
-					>{errorWhileSendingVerificationEmail
+				<Alert.Description>
+					{errorWhileSendingVerificationEmail
 						? (errorMessageWhileSendingVerificationEmail ??
 							'Error while sending verification email')
-						: (form?.message ?? 'Error while loggin in')}</Alert.Description
-				>
+						: (form?.message ?? 'Error while loggin in')}
+				</Alert.Description>
 			</Alert.Root>
 		{/if}
 	</div>
