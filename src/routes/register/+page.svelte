@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { PUBLIC_LANDING_IMAGE } from '$env/static/public';
 	import logo from '$lib/assets/logo.png';
@@ -11,7 +11,7 @@
 	const { form } = $props();
 
 	let isLoading = $state(false);
-	let isAwaitingAuthentication = $state(false);
+	let isWaitingAuthentication = $state(false);
 </script>
 
 <div class="flex h-screen w-screen items-center">
@@ -35,7 +35,7 @@
 					isLoading = false;
 
 					if (result.status === 200) {
-						isAwaitingAuthentication = true;
+						isWaitingAuthentication = true;
 						update();
 					} else {
 						await applyAction(result);
@@ -46,9 +46,14 @@
 			}}
 			class="flex w-4/5 flex-col"
 		>
-			{#if isAwaitingAuthentication}
-				<p class="mb-2 text-lg text-foreground">Account created successfully</p>
-				<p class="mb-3 text-base text-foreground">check your email to complete verification</p>
+			{#if isWaitingAuthentication}
+				<p class="mb-2 text-lg text-foreground">
+					Account created successfully, check your email to complete verification
+				</p>
+				<p class="mb-3 text-base text-foreground">
+					If you didn't receive any email try to login and follow the instructions to receive
+					another verification email
+				</p>
 			{:else}
 				<!-- Form Fields -->
 				<div class="grid gap-2">
@@ -112,7 +117,9 @@
 				<Alert.Root variant="destructive" class="w-3/5">
 					<CircleAlert class="mr-2 h-4 w-4" />
 					<Alert.Title>Error</Alert.Title>
-					<Alert.Description>{form?.message}</Alert.Description>
+					<Alert.Description>
+						{form?.message ?? 'Error while registering'}
+					</Alert.Description>
 				</Alert.Root>
 			{/if}
 		</form>
