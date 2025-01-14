@@ -57,7 +57,7 @@ export const actions = {
 		if (!userIsVerified) {
 			return fail(401, {
 				status: 401,
-				message: 'User is not verified. Please verify your email address.',
+				message: 'User not verified',
 				fields: {
 					email,
 					password
