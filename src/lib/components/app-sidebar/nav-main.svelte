@@ -1,10 +1,10 @@
 <script lang="ts">
-	import * as Collapsible from "$lib/components/ui/collapsible/index.js";
-	import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-	import ChevronRight from "lucide-svelte/icons/chevron-right";
+	import * as Collapsible from '$lib/components/ui/collapsible/index.js';
+	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+	import ChevronRight from 'lucide-svelte/icons/chevron-right';
 
 	let {
-		items,
+		items
 	}: {
 		items: {
 			title: string;
@@ -22,7 +22,7 @@
 </script>
 
 <Sidebar.Group>
-	<Sidebar.GroupLabel>Platform</Sidebar.GroupLabel>
+	<Sidebar.GroupLabel></Sidebar.GroupLabel>
 	<Sidebar.Menu>
 		{#each items as mainItem (mainItem.title)}
 			<Collapsible.Root open={mainItem.isActive} class="group/collapsible">
@@ -35,12 +35,18 @@
 										{mainItem.title}
 									{/snippet}
 									{#if mainItem.icon}
-										<mainItem.icon />
+										<a href={mainItem.url}>
+											<mainItem.icon class="h-4 font-bold text-primary" />
+										</a>
 									{/if}
-									<span>{mainItem.title}</span>
-									<ChevronRight
-										class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
-									/>
+									<a href={mainItem.url}>
+										<span class="text-primary">{mainItem.title}</span>
+									</a>
+									{#if mainItem.items}
+										<ChevronRight
+											class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+										/>
+									{/if}
 								</Sidebar.MenuButton>
 							{/snippet}
 						</Collapsible.Trigger>

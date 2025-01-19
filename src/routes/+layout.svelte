@@ -4,6 +4,6 @@
 	let { children } = $props();
 </script>
 
-<Toaster />
+<Toaster richColors />
 
 {@render children()}
