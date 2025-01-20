@@ -43,7 +43,7 @@ export const actions = {
 				path: '/'
 			});
 
-			await updateSinglePreference(cookies, 'avatar', `${PUBLIC_AVATAR_BASE_URL}${username}`);
+			await updateSinglePreference(cookies, 'avatar', `${PUBLIC_AVATAR_BASE_URL}${session.userId}`);
 
 			await createVerification(cookies);
 		} catch (error) {
