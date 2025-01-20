@@ -1,43 +1,56 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { PUBLIC_AVATAR_BASE_URL } from '$env/static/public';
 	import AppSidebar from '$lib/components/app-sidebar/app-sidebar.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
-	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-	import { LoaderCircle, Search, Home, Book, Bookmark, Star, Award } from 'lucide-svelte';
+	import { LoaderCircle, Search, Home, Book, Bookmark, Star, Award, Turtle } from 'lucide-svelte';
 
-	// Sidebar navigation items
+	let { children, data } = $props();
+	const { user, userBooks } = data;
+
+	// TODO: make sure that the user object is not null, so that we can access the pages without errors
+	let avatarUrl = PUBLIC_AVATAR_BASE_URL + 'mulan';
+	if (user?.prefs && 'avatar' in user?.prefs) {
+		avatarUrl = user.prefs.avatar?.toString() ?? PUBLIC_AVATAR_BASE_URL + 'mulan';
+	}
+
+	// Sidebar data
+	let appLogo = { name: 'tyna', logo: Turtle, url: `/users/${user?.$id}` };
 	let navMain = [
 		{
 			title: 'Home',
-			url: '/users/67868f8a001b6e955b22',
+			url: `/users/${user?.$id}`,
 			icon: Home,
 			isActive: true
 		},
 		{
 			title: 'Books',
-			url: '/users/67868f8a001b6e955b22/books',
+			url: `/users/${user?.$id}/books`,
 			icon: Book
 		},
 		{
 			title: 'Bookmarks',
-			url: '/users/67868f8a001b6e955b22/bookmarks',
+			url: `/users/${user?.$id}/bookmarks`,
 			icon: Bookmark
 		},
 		{
 			title: 'Favorites',
-			url: '/users/67868f8a001b6e955b22/favorites',
+			url: `/users/${user?.$id}/favorites`,
 			icon: Star
 		},
 		{
 			title: 'Awards',
-			url: '/users/67868f8a001b6e955b22/awards',
+			url: `/users/${user?.$id}/awards`,
 			icon: Award
 		}
 	];
-
-	let { children } = $props();
+	let navUser = {
+		username: user?.name ?? '',
+		email: user?.email ?? '',
+		avatar: avatarUrl
+	};
 
 	let isLoading = $state(false);
 	let searchString = $state('');
@@ -49,13 +62,12 @@
 		event.preventDefault(); // Prevent default form submission
 		isLoading = true; // Show loading spinner
 		await goto('/search?q=' + searchString); // Navigate to the target page
-		/* await new Promise((resolve) => setTimeout(resolve, 1000)); */
 		isLoading = false; // Hide loading spinner
 	}
 </script>
 
 <Sidebar.Provider>
-	<AppSidebar {navMain} />
+	<AppSidebar {appLogo} {navMain} {navUser} />
 
 	<Sidebar.Inset>
 		<header
