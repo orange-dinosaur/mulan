@@ -10,7 +10,6 @@
 		collapsible = 'icon',
 		...restProps
 	}: ComponentProps<typeof Sidebar.Root> = $props();
-	console.log('REST PROPS', restProps);
 
 	let appLogo: {
 		name: string;

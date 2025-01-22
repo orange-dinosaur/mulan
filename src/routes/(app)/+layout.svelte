@@ -17,6 +17,42 @@
 	}
 
 	// Sidebar data
+	let restProps = {
+		appLogo: { name: 'tyna', logo: Turtle, url: `/users/${user?.$id}` },
+		navMain: [
+			{
+				title: 'Home',
+				url: `/users/${user?.$id}`,
+				icon: Home,
+				isActive: true
+			},
+			{
+				title: 'Books',
+				url: `/users/${user?.$id}/books`,
+				icon: Book
+			},
+			{
+				title: 'Bookmarks',
+				url: `/users/${user?.$id}/bookmarks`,
+				icon: Bookmark
+			},
+			{
+				title: 'Favorites',
+				url: `/users/${user?.$id}/favorites`,
+				icon: Star
+			},
+			{
+				title: 'Awards',
+				url: `/users/${user?.$id}/awards`,
+				icon: Award
+			}
+		],
+		navUser: {
+			username: user?.name ?? '',
+			email: user?.email ?? '',
+			avatar: avatarUrl
+		}
+	};
 	let appLogo = { name: 'tyna', logo: Turtle, url: `/users/${user?.$id}` };
 	let navMain = [
 		{
@@ -67,7 +103,7 @@
 </script>
 
 <Sidebar.Provider>
-	<AppSidebar {appLogo} {navMain} {navUser} />
+	<AppSidebar {...restProps} />
 
 	<Sidebar.Inset>
 		<header
