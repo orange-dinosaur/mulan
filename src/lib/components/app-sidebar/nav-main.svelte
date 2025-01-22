@@ -36,7 +36,7 @@
 									{/snippet}
 									{#if mainItem.icon}
 										<a href={mainItem.url}>
-											<mainItem.icon class="h-4 font-bold text-primary" />
+											<mainItem.icon class="h-4 pr-2 font-bold text-primary" />
 										</a>
 									{/if}
 									<a href={mainItem.url}>
