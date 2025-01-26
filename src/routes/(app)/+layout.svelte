@@ -5,7 +5,10 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
+	import { createUserState } from '$lib/state/state.svelte.js';
+	import { UserBooks } from '$lib/types/book.js';
 	import { LoaderCircle, Search, Home, Book, Bookmark, Star, Award, Turtle } from 'lucide-svelte';
+	import { setContext } from 'svelte';
 
 	let { children, data } = $props();
 	const { user, userBooks } = data;
@@ -15,6 +18,13 @@
 	if (user?.prefs && 'avatar' in user?.prefs) {
 		avatarUrl = user.prefs.avatar?.toString() ?? PUBLIC_AVATAR_BASE_URL + 'mulan';
 	}
+
+	// set context for child components with the user info
+	setContext('user', user);
+
+	// create and set state with the user books and the search string
+	let userState = $state(createUserState());
+	userState.userBooks = UserBooks.fromJSON(userBooks);
 
 	// Sidebar data
 	let restProps = {
@@ -53,43 +63,9 @@
 			avatar: avatarUrl
 		}
 	};
-	let appLogo = { name: 'tyna', logo: Turtle, url: `/users/${user?.$id}` };
-	let navMain = [
-		{
-			title: 'Home',
-			url: `/users/${user?.$id}`,
-			icon: Home,
-			isActive: true
-		},
-		{
-			title: 'Books',
-			url: `/users/${user?.$id}/books`,
-			icon: Book
-		},
-		{
-			title: 'Bookmarks',
-			url: `/users/${user?.$id}/bookmarks`,
-			icon: Bookmark
-		},
-		{
-			title: 'Favorites',
-			url: `/users/${user?.$id}/favorites`,
-			icon: Star
-		},
-		{
-			title: 'Awards',
-			url: `/users/${user?.$id}/awards`,
-			icon: Award
-		}
-	];
-	let navUser = {
-		username: user?.name ?? '',
-		email: user?.email ?? '',
-		avatar: avatarUrl
-	};
 
 	let isLoading = $state(false);
-	let searchString = $state('');
+	let searchString = $state(userState.searchString);
 
 	/**
 	 * @param {{ preventDefault: () => void; }} event
@@ -126,6 +102,7 @@
 					type="search"
 					placeholder="search..."
 					bind:value={searchString}
+					onchange={() => (userState.searchString = searchString)}
 					class="font- m-0 mr-2 h-5 border-none p-0 pl-2 text-xs"
 				/>
 				<Button type="submit" variant="ghost" class="m-0 h-6 min-h-6 w-6 min-w-6 rounded-full p-0">
