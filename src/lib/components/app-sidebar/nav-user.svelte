@@ -21,8 +21,6 @@
 			method: 'POST'
 		});
 
-		console.log('LOGOUT RES: ', res);
-
 		if (res.ok) {
 			// Workaround: redirect to login page
 			const location = '/login';

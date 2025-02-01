@@ -4,8 +4,9 @@
 	import AppSidebar from '$lib/components/app-sidebar/app-sidebar.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
+	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-	import { createUserState } from '$lib/state/state.svelte.js';
+	import { userState } from '$lib/state/state.svelte.js';
 	import { UserBooks } from '$lib/types/book.js';
 	import { LoaderCircle, Search, Home, Book, Bookmark, Star, Award, Turtle } from 'lucide-svelte';
 	import { setContext } from 'svelte';
@@ -23,8 +24,9 @@
 	setContext('user', user);
 
 	// create and set state with the user books and the search string
-	let userState = $state(createUserState());
 	userState.userBooks = UserBooks.fromJSON(userBooks);
+
+	console.log('USERSTATE - BOOKS: ', userState.userBooks);
 
 	// Sidebar data
 	let restProps = {
@@ -81,7 +83,7 @@
 <Sidebar.Provider>
 	<AppSidebar {...restProps} />
 
-	<Sidebar.Inset>
+	<Sidebar.Inset class="flex min-h-screen flex-col">
 		<header
 			class="flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
 		>
@@ -115,8 +117,10 @@
 			</form>
 		</header>
 
-		<div class="flex h-full w-full pl-4 pt-0">
-			{@render children()}
-		</div>
+		<ScrollArea class="h-[calc(100vh-5rem)]">
+			<div class="flex w-full pl-4 pt-0">
+				{@render children()}
+			</div>
+		</ScrollArea>
 	</Sidebar.Inset>
 </Sidebar.Provider>

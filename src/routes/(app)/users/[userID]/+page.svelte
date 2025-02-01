@@ -1,10 +1,13 @@
 <script lang="ts">
-	import type { UserBooks } from '$lib/types/book';
+	import { UserBooks } from '$lib/types/book';
 	import type { Models } from 'node-appwrite';
 	import { getContext } from 'svelte';
+	import { userState } from '$lib/state/state.svelte';
 
 	const user: Models.User<Models.Preferences> = getContext('user');
-	const userBooks: UserBooks = getContext('userBooks');
+	let userBooks: UserBooks = $state(userState ? userState.userBooks : new UserBooks(user.$id));
+
+	console.log('USERSTATE - BOOKS: ', userState.userBooks);
 </script>
 
 <div class="flex flex-col">
