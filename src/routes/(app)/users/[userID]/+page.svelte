@@ -6,8 +6,6 @@
 
 	const user: Models.User<Models.Preferences> = getContext('user');
 	let userBooks: UserBooks = $state(userState ? userState.userBooks : new UserBooks(user.$id));
-
-	console.log('USERSTATE - BOOKS: ', userState.userBooks);
 </script>
 
 <div class="flex flex-col">

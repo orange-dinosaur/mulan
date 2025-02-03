@@ -26,8 +26,6 @@
 	// create and set state with the user books and the search string
 	userState.userBooks = UserBooks.fromJSON(userBooks);
 
-	console.log('USERSTATE - BOOKS: ', userState.userBooks);
-
 	// Sidebar data
 	let restProps = {
 		appLogo: { name: 'tyna', logo: Turtle, url: `/users/${user?.$id}` },
