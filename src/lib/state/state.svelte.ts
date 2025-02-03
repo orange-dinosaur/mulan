@@ -15,6 +15,14 @@ export class UserState {
 		};
 	}
 
+	clean() {
+		this.#userState = {
+			user: '',
+			userBooks: new UserBooks(''),
+			searchString: ''
+		};
+	}
+
 	get user() {
 		return this.#userState.user;
 	}

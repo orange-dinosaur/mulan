@@ -6,6 +6,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import { userState } from '$lib/state/state.svelte.js';
 	import { error } from '@sveltejs/kit';
 	import { LoaderCircle, CircleAlert } from 'lucide-svelte';
 
@@ -66,6 +67,9 @@
 
 					if (result.status === 200) {
 						update();
+
+						// clean userState after login
+						userState.clean();
 					} else {
 						await applyAction(result);
 					}

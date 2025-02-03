@@ -12,6 +12,7 @@
 	import CreditCard from 'lucide-svelte/icons/credit-card';
 	import LogOut from 'lucide-svelte/icons/log-out';
 	import Sparkles from 'lucide-svelte/icons/sparkles';
+	import { userState } from '$lib/state/state.svelte.js';
 
 	let { user }: { user: { username: string; email: string; avatar: string } } = $props();
 	const sidebar = useSidebar();
@@ -22,6 +23,9 @@
 		});
 
 		if (res.ok) {
+			// clean userState after logout
+			userState.clean();
+
 			// Workaround: redirect to login page
 			const location = '/login';
 			if (browser) return await goto(location);
