@@ -21,6 +21,9 @@
 
 	let tempBookId = $state('');
 
+	// check if the book is already in the user's library
+	let isBookAlredySaved = $state(userBooks.books.some((b) => b.bookId === book.bookId));
+
 	// boolean variables that define if there is an action ongoing
 	let isLoadingSave = $state(false);
 	let isLoadingWishlist = $state(false);
@@ -61,10 +64,10 @@
 	// otherwise, set the book properties with the default values
 	function defineInitialValues() {
 		return {
-			readingStatus: checkIfBookIsAlreadySaved() ? book.readingStatus : '',
-			bookType: checkIfBookIsAlreadySaved() ? book.bookType : '',
-			tags: checkIfBookIsAlreadySaved() ? book.tags : [],
-			rating: checkIfBookIsAlreadySaved() ? book.rating : 0,
+			readingStatus: isBookAlredySaved ? book.readingStatus : '',
+			bookType: isBookAlredySaved ? book.bookType : '',
+			tags: isBookAlredySaved ? book.tags : [],
+			rating: isBookAlredySaved ? book.rating : 0,
 			readingStartDate: new Date(),
 			readingEndDate: new Date()
 		};
@@ -135,7 +138,7 @@
 		});
 
 		if (!res.ok) {
-			toast.error('Error updating book');
+			toast.error('Error saving book');
 		} else {
 			// get the book from the response
 			const savedBookId = await res.json();
@@ -156,9 +159,10 @@
 			});
 
 			// update user state
-			// TODO: find a better way to update the user state
 			userBooks.books = [...userBooks.books, SavedBookFull];
-			userState.userBooks = userBooks;
+			userState.userBooksBooks = userBooks.books;
+
+			isBookAlredySaved = true;
 
 			// update the tempBookId so that it can be used to update the book before the user refreshes the page
 			tempBookId = savedBookId.id;
@@ -259,6 +263,8 @@
 			userBooks.books = updatedBooks;
 			userState.userBooks = userBooks;
 
+			isBookAlredySaved = false;
+
 			toast.success('Book deleted successfully');
 
 			isSheetOpen = false;
@@ -321,7 +327,7 @@
 						<div class="text-left">
 							<div class="flex items-center">
 								<h2 class="text-xl font-semibold">{book.title}</h2>
-								{#if checkIfBookIsAlreadySaved()}
+								{#if isBookAlredySaved}
 									<BookCheck class="w-h-5 ml-2 h-5 text-primary" />
 								{/if}
 							</div>
@@ -349,7 +355,7 @@
 
 					<!-- Actions -->
 					<div class="ml-8 flex h-60 flex-col justify-end">
-						{#if checkIfBookIsAlreadySaved()}
+						{#if isBookAlredySaved}
 							<!-- Update book -->
 							<Button
 								class="mb-2"
@@ -403,7 +409,7 @@
 					<!-- Book Title -->
 					<div class="flex items-center">
 						<Sheet.Title>{book.title}</Sheet.Title>
-						{#if checkIfBookIsAlreadySaved() && displayMode === 'search'}
+						{#if isBookAlredySaved && displayMode === 'search'}
 							<BookCheck class="w-h-5 ml-2 h-5 text-primary" />
 						{/if}
 					</div>
