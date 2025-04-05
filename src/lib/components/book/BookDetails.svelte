@@ -265,9 +265,9 @@
 
 			isBookAlredySaved = false;
 
-			toast.success('Book deleted successfully');
-
 			isSheetOpen = false;
+
+			toast.success('Book deleted successfully');
 		}
 
 		isSheetOpen = false;
@@ -277,7 +277,7 @@
 </script>
 
 <div class="mt-4 flex justify-start">
-	<Sheet.Root open={isSheetOpen}>
+	<Sheet.Root bind:open={isSheetOpen}>
 		{#if displayMode === 'home'}
 			<Sheet.Trigger
 				on:click={() => {
