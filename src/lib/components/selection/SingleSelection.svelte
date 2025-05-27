@@ -14,21 +14,24 @@
 </script>
 
 <Select.Root
-	selected={selection ? { label: selection, value: selection } : undefined}
-	onSelectedChange={(v: { value: string }) => {
-		if (v) {
-			handleSelectionChange(v.value as string);
-		}
-	}}
+	type="single"
+	name="single-selection"
+	bind:value={selection}
+	onValueChange={handleSelectionChange}
 >
 	<Select.Trigger
 		class="m-0 h-6 w-[180px] rounded-none border-0 border-b-[1px] border-b-primary p-0 py-1 text-sm"
 	>
-		<!-- <Select.Value placeholder={selection as string} /> -->
+		{#if selection}
+			<span class="text-primary">{selection}</span>
+		{:else}
+			<span class="text-muted-foreground">Select an option</span>
+		{/if}
 	</Select.Trigger>
 	<Select.Content>
 		{#each possibleSelections as possibleSelection}
 			<Select.Item value={possibleSelection}>{possibleSelection}</Select.Item>
 		{/each}
+		<Select.Item value=""></Select.Item>
 	</Select.Content>
 </Select.Root>
