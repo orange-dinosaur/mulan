@@ -3,7 +3,7 @@ import {
 	PUBLIC_EXTERNAL_BOOKS_API_MAX_RESULTS,
 	PUBLIC_EXTERNAL_BOOKS_API_URL
 } from '$env/static/public';
-import { BookSearch } from '$lib/types/book/book';
+import { BookSearch } from '$lib/types/book';
 import { type RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ params, locals }): Promise<Response> => {
@@ -33,11 +33,15 @@ export const GET: RequestHandler = async ({ params, locals }): Promise<Response>
 						books.push(book);
 					});
 				});
+		// TODO: handle error properly
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (error) {
 			return new Response('Error searching Books', { status: 500 });
 		}
 
 		return new Response(JSON.stringify(books), { status: 200 });
+	// TODO: handle error properly
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (error) {
 		return new Response('Error updating Book', { status: 500 });
 	}
