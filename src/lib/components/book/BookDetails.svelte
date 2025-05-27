@@ -276,7 +276,7 @@
 	}
 </script>
 
-<div class="mt-4 flex justify-start">
+<div class="mt-4 flex justify-start focus:border-transparent focus:outline-none">
 	<Sheet.Root bind:open={isSheetOpen}>
 		{#if displayMode === 'home'}
 			<Sheet.Trigger
