@@ -11,6 +11,6 @@
 	}
 </script>
 
-<div class="flex w-56 max-w-56 flex-col">
+<div class="flex w-56 max-w-56 flex-col focus:border-transparent focus:outline-none">
 	<BookDetails book={bookFull} displayMode="home" />
 </div>
