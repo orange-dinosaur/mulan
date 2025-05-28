@@ -24,7 +24,9 @@
 
 		if (res.ok) {
 			// clean userState after logout
-			userState.clean();
+			userState.searchString = '';
+			userState.user = undefined;
+			userState.userBooks = undefined;
 
 			// Workaround: redirect to login page
 			const location = '/login';

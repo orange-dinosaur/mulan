@@ -69,7 +69,9 @@
 						update();
 
 						// clean userState after login
-						userState.clean();
+						userState.searchString = '';
+						userState.user = undefined;
+						userState.userBooks = undefined;
 					} else {
 						await applyAction(result);
 					}

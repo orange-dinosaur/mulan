@@ -13,7 +13,7 @@
 
 	<ScrollArea>
 		<div class="flex h-[80vh] w-full flex-wrap">
-			{#if userState.userBooks.books.length > 0}
+			{#if userState.userBooks && userState.userBooks.books.length > 0}
 				{#each userState.userBooks.books as book}
 					<div class="my-4 ml-1 mr-14 flex">
 						<div class="flex w-56 max-w-56 flex-col">

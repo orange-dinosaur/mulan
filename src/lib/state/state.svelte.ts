@@ -1,4 +1,44 @@
-import { BookFull, UserBooks } from '$lib/types/book';
+import type { UserBooks } from "$lib/types/book";
+
+type UserState = {
+	user: string | undefined;
+	userBooks: UserBooks | undefined;
+	searchString: string;
+};
+
+function createUserState() {
+	const userState: UserState = $state({
+		user: undefined,
+		userBooks: undefined,
+		searchString: ''
+	});
+
+	return {
+		get user() {
+			return userState.user;
+		},
+		get userBooks() {
+			return userState.userBooks;
+		},
+		get searchString() {
+			return userState.searchString;
+		},
+
+		set user(user: string | undefined) {
+			userState.user = user;
+		},
+		set userBooks(userBooks: UserBooks | undefined) {
+			userState.userBooks = userBooks;
+		},
+		set searchString(searchString: string) {
+			userState.searchString = searchString;
+		},
+	};
+}
+
+export const userState = createUserState();
+
+/* import { BookFull, UserBooks } from '$lib/types/book';
 
 export class UserState {
 	#userState: {
@@ -50,7 +90,7 @@ export class UserState {
 	}
 }
 
-export const userState = $state(new UserState());
+export const userState = $state(new UserState()); */
 
 /* type UserState = {
 	user: string | undefined;

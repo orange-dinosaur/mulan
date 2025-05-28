@@ -5,7 +5,9 @@
 	import { userState } from '$lib/state/state.svelte';
 
 	const user: Models.User<Models.Preferences> = getContext('user');
-	let userBooks: UserBooks = $state(userState ? userState.userBooks : new UserBooks(user.$id));
+	let userBooks: UserBooks = $state(
+		userState && userState.userBooks ? userState.userBooks : new UserBooks(user.$id)
+	);
 </script>
 
 <div class="flex flex-col">

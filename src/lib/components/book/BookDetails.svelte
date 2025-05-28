@@ -160,7 +160,9 @@
 
 			// update user state
 			userBooks.books = [...userBooks.books, SavedBookFull];
-			userState.userBooksBooks = userBooks.books;
+			if (userState.userBooks) {
+				userState.userBooks.books = userBooks.books;
+			}
 
 			isBookAlredySaved = true;
 
@@ -261,7 +263,10 @@
 			// TODO: find a better way to update the user state
 			const updatedBooks = userBooks.books.filter((b) => b.id !== bookIdToDelete);
 			userBooks.books = updatedBooks;
+
 			userState.userBooks = userBooks;
+			userState.userBooks = undefined; // reset userBooks to trigger reactivity
+			userState.userBooks = userBooks; // reassign to trigger reactivity
 
 			isBookAlredySaved = false;
 
