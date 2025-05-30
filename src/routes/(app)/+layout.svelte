@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { PUBLIC_AVATAR_BASE_URL } from '$env/static/public';
 	import AppSidebar from '$lib/components/app-sidebar/app-sidebar.svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -25,6 +26,24 @@
 
 	// create and set state with the user books and the search string
 	userState.userBooks = UserBooks.fromJSON(userBooks);
+
+	let searchStr = $state(userState.searchString);
+
+	let previousPathname = $page.url.pathname;
+	$effect(() => {
+		const currentPathnameInEffect = $page.url.pathname;
+
+		if (previousPathname.includes('/search') && !currentPathnameInEffect.includes('/search')) {
+			if (previousPathname !== currentPathnameInEffect) {
+				userState.searchString = ''; // Clear search string when leaving search page
+				searchStr = ''; // Update local searchStr state
+			}
+		}
+
+		return () => {
+			previousPathname = currentPathnameInEffect;
+		};
+	});
 
 	// Sidebar data
 	let restProps = {
@@ -65,7 +84,6 @@
 	};
 
 	let isLoading = $state(false);
-	let searchString = $state(userState.searchString);
 
 	/**
 	 * @param {{ preventDefault: () => void; }} event
@@ -73,7 +91,7 @@
 	async function handleSearchSubmit(event: { preventDefault: () => void }) {
 		event.preventDefault(); // Prevent default form submission
 		isLoading = true; // Show loading spinner
-		await goto('/search?q=' + searchString); // Navigate to the target page
+		await goto('/search?q=' + userState.searchString); // Navigate to the target page
 		isLoading = false; // Hide loading spinner
 	}
 </script>
@@ -101,8 +119,8 @@
 					name="searchString"
 					type="search"
 					placeholder="search..."
-					bind:value={searchString}
-					onchange={() => (userState.searchString = searchString)}
+					bind:value={searchStr}
+					onchange={() => (userState.searchString = searchStr)}
 					class="font- m-0 mr-2 h-5 border-none p-0 pl-2 text-xs"
 				/>
 				<Button type="submit" variant="ghost" class="m-0 h-6 min-h-6 w-6 min-w-6 rounded-full p-0">

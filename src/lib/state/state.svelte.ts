@@ -3,7 +3,7 @@ import type { UserBooks } from "$lib/types/book";
 type UserState = {
 	user: string | undefined;
 	userBooks: UserBooks | undefined;
-	searchString: string;
+	searchString: string | undefined;
 };
 
 function createUserState() {
@@ -21,7 +21,7 @@ function createUserState() {
 			return userState.userBooks;
 		},
 		get searchString() {
-			return userState.searchString;
+			return userState.searchString ?? '';
 		},
 
 		set user(user: string | undefined) {
@@ -30,7 +30,7 @@ function createUserState() {
 		set userBooks(userBooks: UserBooks | undefined) {
 			userState.userBooks = userBooks;
 		},
-		set searchString(searchString: string) {
+		set searchString(searchString: string | undefined) {
 			userState.searchString = searchString;
 		},
 	};

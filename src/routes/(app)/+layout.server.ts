@@ -1,7 +1,7 @@
 import { UserBooks } from '$lib/types/book';
 import { redirect } from '@sveltejs/kit';
 
-export async function load({ locals }) {
+export async function load({ locals, url }) {
 	// Only logged in users can access these pages
 	if (!locals.user) {
 		redirect(301, '/register');
@@ -20,6 +20,6 @@ export async function load({ locals }) {
 
 	return {
 		user: locals.user,
-		userBooks: userBooks.toJSON()
+		userBooks: userBooks.toJSON(),
 	};
 }
