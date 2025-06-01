@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { PUBLIC_AVATAR_BASE_URL } from '$env/static/public';
 	import AppSidebar from '$lib/components/app-sidebar/app-sidebar.svelte';
 	import { Button } from '$lib/components/ui/button';
@@ -28,15 +28,19 @@
 	userState.userBooks = UserBooks.fromJSON(userBooks);
 
 	let searchStr = $state(userState.searchString);
+	if (page.url.pathname.includes('/search')) {
+		userState.searchString = page.url.searchParams.get('q') || '';
+		searchStr = userState.searchString;
+	}
 
-	let previousPathname = $page.url.pathname;
+	let previousPathname = page.url.pathname;
 	$effect(() => {
-		const currentPathnameInEffect = $page.url.pathname;
+		const currentPathnameInEffect = page.url.pathname;
 
 		if (previousPathname.includes('/search') && !currentPathnameInEffect.includes('/search')) {
 			if (previousPathname !== currentPathnameInEffect) {
-				userState.searchString = ''; // Clear search string when leaving search page
-				searchStr = ''; // Update local searchStr state
+				userState.searchString = '';
+				searchStr = '';
 			}
 		}
 

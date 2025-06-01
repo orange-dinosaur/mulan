@@ -1,14 +1,48 @@
 <script lang="ts">
-	import { BookSearch as BookSearchClass } from '$lib/types/book.js';
+	import { BookSearch as BookSearchClass, type BookSearchJSON } from '$lib/types/book.js';
 	import BookSearch from '$lib/components/book/BookSearch.svelte';
+	import { userState } from '$lib/state/state.svelte.js';
+	import { page } from '$app/state';
+	import { toast } from 'svelte-sonner';
 
 	let { data } = $props();
-	let searchStr = $state(data.searchStr);
-
-	let isLoading = $state(false);
 
 	// transform searched books to BookSearch
 	let books = $state(data.books.map((book) => BookSearchClass.fromJSON(book)));
+	let searchStr = $state(userState.searchString);
+	if (page.url.pathname.includes('/search')) {
+		userState.searchString = page.url.searchParams.get('q') || '';
+		searchStr = userState.searchString;
+	}
+
+	$effect(() => {
+		let searchParams = page.url.searchParams.get('q') || '';
+
+		if (searchParams !== searchStr) {
+			userState.searchString = searchParams;
+			searchStr = searchParams;
+
+			// Update books based on the new search string
+			(async () => {
+				const res = await fetch(`/api/search/books/${searchStr}`, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				});
+
+				if (!res.ok) {
+					toast.error('Error while searching for books, please try again.', {
+						duration: 5000
+					});
+				} else {
+					const data: BookSearchJSON[] = await res.json();
+					books.length = 0;
+					books.push(...data.map((item) => BookSearchClass.fromJSON(item)));
+				}
+			})();
+		}
+	});
 </script>
 
 <div class="flex flex-col items-center justify-start pt-16">

@@ -38,9 +38,7 @@ export async function load({ locals, url }) {
 
 					// loop through the items
 					items.forEach((item: object) => {
-						const book = new BookSearch(item);
-
-						books.push(book);
+						books.push(new BookSearch(item));
 					});
 				});
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -52,7 +50,6 @@ export async function load({ locals, url }) {
 	const plainObjectBooks = books.map((book) => book.toJSON());
 
 	return {
-		searchStr,
 		books: plainObjectBooks
 	};
 }
