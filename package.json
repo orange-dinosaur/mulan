@@ -14,12 +14,13 @@
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.3",
+		"@lucide/svelte": "^0.482.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-vercel": "^5.7.2",
 		"@sveltejs/kit": "^2.9.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"autoprefixer": "^10.4.20",
-		"bits-ui": "1.0.0-next.78",
+		"bits-ui": "1.8.0",
 		"clsx": "^2.1.1",
 		"eslint": "^9.7.0",
 		"eslint-config-prettier": "^9.1.0",
@@ -42,6 +43,7 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
+		"@internationalized/date": "^3.8.1",
 		"@tailwindcss/forms": "^0.5.9",
 		"@tailwindcss/typography": "^0.5.15",
 		"node-appwrite": "^14.1.0"

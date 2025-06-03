@@ -11,6 +11,8 @@
 	import { getContext } from 'svelte';
 	import type { Models } from 'node-appwrite';
 	import Tags from '$lib/components/tags/Tags.svelte';
+	import DatePicker from '../date-picker/DatePicker.svelte';
+	import { CalendarDate } from '@internationalized/date';
 
 	const user: Models.User<Models.Preferences> = getContext('user');
 	let userBooks: UserBooks = $state(
@@ -68,8 +70,8 @@
 			bookType: isBookAlredySaved ? book.bookType : '',
 			tags: isBookAlredySaved ? book.tags : [],
 			rating: isBookAlredySaved ? book.rating : 0,
-			readingStartDate: new Date(),
-			readingEndDate: new Date()
+			readingStartDate: new CalendarDate(1992, 6, 8),
+			readingEndDate: new CalendarDate(1992, 6, 8)
 		};
 	}
 	let initialValues = defineInitialValues();
@@ -77,8 +79,24 @@
 	let bookType = $state(initialValues.bookType);
 	let tags: string[] = $state(initialValues.tags);
 	let rating: number = $state(initialValues.rating);
-	let readingStartDate = $state(book.readingStartDate);
-	let readingEndDate = $state(book.readingEndDate);
+	let readingStartDate = $state(
+		book.readingStartDate
+			? new CalendarDate(
+					book.readingStartDate.getFullYear(),
+					book.readingStartDate.getMonth() + 1,
+					book.readingStartDate.getDate()
+				)
+			: undefined
+	);
+	let readingEndDate = $state(
+		book.readingStartDate
+			? new CalendarDate(
+					book.readingStartDate.getFullYear(),
+					book.readingStartDate.getMonth() + 1,
+					book.readingStartDate.getDate()
+				)
+			: undefined
+	);
 
 	// functions to manage changes on book's properties
 	function handleReadingStatusChange(newReadingStatus: string) {
@@ -111,6 +129,56 @@
 			isRatingChanged = true;
 		} else {
 			isRatingChanged = false;
+		}
+	}
+	import type { DateValue } from '@internationalized/date';
+
+	function handleReadingStartDateChange(newDate: DateValue) {
+		// Convert DateValue to CalendarDate if necessary
+		let calendarDate: CalendarDate | undefined = undefined;
+		if (newDate instanceof CalendarDate) {
+			calendarDate = newDate;
+		} else if (newDate) {
+			calendarDate = new CalendarDate(newDate.year, newDate.month, newDate.day);
+		}
+		readingStartDate = calendarDate;
+		if (
+			calendarDate !==
+			(book.readingStartDate
+				? new CalendarDate(
+						book.readingStartDate.getFullYear(),
+						book.readingStartDate.getMonth() + 1,
+						book.readingStartDate.getDate()
+					)
+				: new CalendarDate(1992, 6, 8))
+		) {
+			isReadingStartDateChanged = true;
+		} else {
+			isReadingStartDateChanged = false;
+		}
+	}
+	function handleReadingEndDateChange(newDate: DateValue) {
+		// Convert DateValue to CalendarDate if necessary
+		let calendarDate: CalendarDate | undefined = undefined;
+		if (newDate instanceof CalendarDate) {
+			calendarDate = newDate;
+		} else if (newDate) {
+			calendarDate = new CalendarDate(newDate.year, newDate.month, newDate.day);
+		}
+		readingEndDate = calendarDate;
+		if (
+			calendarDate !==
+			(book.readingEndDate
+				? new CalendarDate(
+						book.readingEndDate.getFullYear(),
+						book.readingEndDate.getMonth() + 1,
+						book.readingEndDate.getDate()
+					)
+				: new CalendarDate(1992, 6, 8))
+		) {
+			isReadingEndDateChanged = true;
+		} else {
+			isReadingEndDateChanged = false;
 		}
 	}
 
@@ -189,8 +257,8 @@
 		// create a book to update object setting only the fields that have changed
 		const bookToUpdate = new BookToUpdate({
 			readingStatus: isReadingStatusChanged ? readingStatus : undefined,
-			readingStartDate: isReadingStartDateChanged ? readingStartDate.toDateString() : undefined,
-			readingEndDate: isReadingEndDateChanged ? readingEndDate.toDateString() : undefined,
+			readingStartDate: isReadingStartDateChanged ? readingStartDate?.toString() : undefined,
+			readingEndDate: isReadingEndDateChanged ? readingEndDate?.toString() : undefined,
 			bookType: isBookTypeChanged ? bookType : undefined,
 			tags: isTagsChanged ? tags : undefined,
 			rating: isRatingChanged ? rating : undefined,
@@ -285,7 +353,7 @@
 	<Sheet.Root bind:open={isSheetOpen}>
 		{#if displayMode === 'home'}
 			<Sheet.Trigger
-				on:click={() => {
+				onclick={() => {
 					isSheetOpen = true;
 				}}
 				class="cursor-pointer text-sm font-semibold text-primary"
@@ -316,7 +384,7 @@
 			>
 		{:else if displayMode === 'search'}
 			<Sheet.Trigger
-				on:click={() => {
+				onclick={() => {
 					isSheetOpen = true;
 				}}
 				class="cursor-pointer text-sm font-semibold text-primary"
@@ -470,13 +538,23 @@
 					</div>
 
 					<!-- Book Type -->
-					<div class="mb-4 mt-1 flex items-center">
+					<div class="mb-1 mt-1 flex items-center">
 						<p class="mr-2 text-sm font-semibold text-muted-foreground">Book type:</p>
 						<SingleSelection
 							possibleSelections={bookTypeSelection}
 							selection={bookType}
 							onSelectionChange={handleBookTypeChange}
 						/>
+					</div>
+
+					<!-- Reading Dates -->
+					<div class="mb-1 mt-1 flex items-center">
+						<p class="mr-2 text-sm font-semibold text-muted-foreground">Reading start date:</p>
+						<DatePicker date={readingStartDate} onDateChange={handleReadingStartDateChange} />
+					</div>
+					<div class="mb-4 mt-1 flex items-center">
+						<p class="mr-2 text-sm font-semibold text-muted-foreground">Reading end date:</p>
+						<DatePicker date={readingEndDate} onDateChange={handleReadingEndDateChange} />
 					</div>
 
 					<!-- Tags -->
