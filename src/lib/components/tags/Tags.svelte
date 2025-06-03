@@ -15,7 +15,7 @@
 </script>
 
 <div class="flex flex-wrap items-center">
-	<Tags size={24} class="text-primary mr-2" />
+	<Tags size={24} class="mr-2 text-primary" />
 
 	{#each tagsArr as tag}
 		<Badge class="mr-2 rounded-md py-1"
@@ -38,8 +38,8 @@
 	{#if !isAddingTag}
 		<Button
 			variant="ghost"
-			class="h-4 w-4 text-xs text-primary font-semibold rounded-full"
-			on:click={() => (isAddingTag = true)}>+</Button
+			class="h-4 w-4 rounded-full text-xs font-semibold text-primary"
+			onclick={() => (isAddingTag = true)}>+</Button
 		>
 	{:else}
 		<div class="flex items-center">
@@ -49,7 +49,7 @@
 				type="text"
 				bind:value={tag}
 				placeholder="tag"
-				class="w-32 border-b-2 border-primary bg-transparent px-2 mr-2 text-sm"
+				class="mr-2 w-32 border-b-2 border-primary bg-transparent px-2 text-sm"
 				onkeydown={(e) => {
 					if (e.key === 'Enter') {
 						tagsArr.push(tag);
@@ -61,8 +61,8 @@
 			/>
 			<Button
 				variant="default"
-				class="h-2 w-2 text-xs rounded-md py-3"
-				on:click={() => {
+				class="h-2 w-2 rounded-md py-3 text-xs"
+				onclick={() => {
 					tagsArr.push(tag);
 					tag = '';
 					handleTagsChange(tagsArr);
@@ -71,8 +71,8 @@
 			>
 			<Button
 				variant="destructive"
-				class="h-2 w-2 text-xs rounded-md py-3 ml-1"
-				on:click={() => {
+				class="ml-1 h-2 w-2 rounded-md py-3 text-xs"
+				onclick={() => {
 					tag = '';
 					isAddingTag = false;
 				}}>x</Button
