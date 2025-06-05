@@ -8,7 +8,16 @@
 	let { data } = $props();
 
 	// transform searched books to BookSearch
-	let books = $state(data.books.map((book) => BookSearchClass.fromJSON(book)));
+	const seenIds = new Set<string>(); // To avoid duplicates
+	let books = $state(
+		data.books
+			.filter((book) => {
+				if (seenIds.has(book.id)) return false; // Skip if already seen
+				seenIds.add(book.id); // Mark this ID as seen
+				return true; // Include this book
+			})
+			.map((book) => BookSearchClass.fromJSON(book))
+	);
 	let searchStr = $state(userState.searchString);
 	if (page.url.pathname.includes('/search')) {
 		userState.searchString = page.url.searchParams.get('q') || '';
