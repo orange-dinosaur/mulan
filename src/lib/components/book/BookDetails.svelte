@@ -13,6 +13,7 @@
 	import Tags from '$lib/components/tags/Tags.svelte';
 	import DatePicker from '../date-picker/DatePicker.svelte';
 	import { CalendarDate } from '@internationalized/date';
+	import type { DateValue } from '@internationalized/date';
 
 	const user: Models.User<Models.Preferences> = getContext('user');
 	let userBooks: UserBooks = $state(
@@ -89,11 +90,11 @@
 			: undefined
 	);
 	let readingEndDate = $state(
-		book.readingStartDate
+		book.readingEndDate
 			? new CalendarDate(
-					book.readingStartDate.getFullYear(),
-					book.readingStartDate.getMonth() + 1,
-					book.readingStartDate.getDate()
+					book.readingEndDate.getFullYear(),
+					book.readingEndDate.getMonth() + 1,
+					book.readingEndDate.getDate()
 				)
 			: undefined
 	);
@@ -131,16 +132,14 @@
 			isRatingChanged = false;
 		}
 	}
-	import type { DateValue } from '@internationalized/date';
-
 	function handleReadingStartDateChange(newDate: DateValue) {
 		// Convert DateValue to CalendarDate if necessary
 		let calendarDate: CalendarDate | undefined = undefined;
 		if (newDate instanceof CalendarDate) {
 			calendarDate = newDate;
-		} else if (newDate) {
+		} /*  else if (newDate) {
 			calendarDate = new CalendarDate(newDate.year, newDate.month, newDate.day);
-		}
+		} */
 		readingStartDate = calendarDate;
 		if (
 			calendarDate !==
@@ -162,9 +161,9 @@
 		let calendarDate: CalendarDate | undefined = undefined;
 		if (newDate instanceof CalendarDate) {
 			calendarDate = newDate;
-		} else if (newDate) {
+		} /* else if (newDate) {
 			calendarDate = new CalendarDate(newDate.year, newDate.month, newDate.day);
-		}
+		} */
 		readingEndDate = calendarDate;
 		if (
 			calendarDate !==
@@ -184,9 +183,25 @@
 
 	// save the book to the user's library
 	async function saveBookToLibrary() {
+		const readingStartDateStr = readingStartDate
+			? readingStartDate?.compare(new CalendarDate(1970, 1, 1)) === 0 ||
+				readingStartDate?.compare(new CalendarDate(1899, 12, 31)) === 0
+				? ''
+				: readingStartDate.toString()
+			: '';
+
+		const readingEndDateStr = readingEndDate
+			? readingEndDate?.compare(new CalendarDate(1970, 1, 1)) === 0 ||
+				readingEndDate?.compare(new CalendarDate(1899, 12, 31)) === 0
+				? ''
+				: readingEndDate.toString()
+			: '';
+
 		const bookToSave = new BookToSave({
 			bookId: book.bookId,
 			readingStatus,
+			readingStartDate: readingStartDateStr,
+			readingEndDate: readingEndDateStr,
 			bookType,
 			tags,
 			rating
@@ -254,11 +269,25 @@
 
 	// update the book in the user's library
 	async function updateBookInLibrary() {
+		const readingStartDateStr = readingStartDate
+			? readingStartDate?.compare(new CalendarDate(1970, 1, 1)) === 0 ||
+				readingStartDate?.compare(new CalendarDate(1899, 12, 31)) === 0
+				? ''
+				: readingStartDate.toString()
+			: '';
+
+		const readingEndDateStr = readingEndDate
+			? readingEndDate?.compare(new CalendarDate(1970, 1, 1)) === 0 ||
+				readingEndDate?.compare(new CalendarDate(1899, 12, 31)) === 0
+				? ''
+				: readingEndDate.toString()
+			: '';
+
 		// create a book to update object setting only the fields that have changed
 		const bookToUpdate = new BookToUpdate({
 			readingStatus: isReadingStatusChanged ? readingStatus : undefined,
-			readingStartDate: isReadingStartDateChanged ? readingStartDate?.toString() : undefined,
-			readingEndDate: isReadingEndDateChanged ? readingEndDate?.toString() : undefined,
+			readingStartDate: undefined,
+			readingEndDate: undefined,
 			bookType: isBookTypeChanged ? bookType : undefined,
 			tags: isTagsChanged ? tags : undefined,
 			rating: isRatingChanged ? rating : undefined,
@@ -266,6 +295,18 @@
 			libraryId: undefined
 		});
 		const bookToUpdateJSON = bookToUpdate.toJSON();
+
+		console.log('readingStartDateStr', readingStartDateStr);
+		console.log('readingEndDateStr', readingEndDateStr);
+
+		if (readingStartDateStr !== '') {
+			bookToUpdateJSON.readingStartDate = readingStartDateStr;
+		}
+		if (readingEndDateStr !== '') {
+			bookToUpdateJSON.readingEndDate = readingEndDateStr;
+		}
+
+		console.log('bookToUpdateJSON', bookToUpdateJSON);
 
 		isLoadingUpdate = true;
 

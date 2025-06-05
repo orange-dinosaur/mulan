@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { CalendarIcon } from 'lucide-svelte';
-	import { DateFormatter, type DateValue, getLocalTimeZone } from '@internationalized/date';
+	import {
+		CalendarDate,
+		DateFormatter,
+		type DateValue,
+		getLocalTimeZone
+	} from '@internationalized/date';
 	import { cn } from '$lib/utils.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import { Calendar } from '$lib/components/ui/calendar/index.js';
@@ -15,12 +20,23 @@
 		dateStyle: 'short'
 	});
 
-	let value = $state<DateValue | undefined>(date ? date : undefined);
+	let value = $state<DateValue | undefined>(
+		date?.compare(new CalendarDate(1970, 1, 1)) === 0 ||
+			date?.compare(new CalendarDate(1899, 12, 31)) === 0
+			? undefined
+			: date
+	);
 	let contentRef = $state<HTMLElement | null>(null);
 
 	function handleDateChange(date: DateValue) {
 		(onDateChange as (date: DateValue) => void)(date);
 	}
+
+	$effect(() => {
+		if (value) {
+			handleDateChange(value);
+		}
+	});
 </script>
 
 <Popover.Root>
@@ -33,11 +49,6 @@
 			}),
 			!value && 'text-muted-foreground'
 		)}
-		onchange={(e) => {
-			const customEvent = e as unknown as CustomEvent<{ value: DateValue }>;
-			value = customEvent.detail.value;
-			handleDateChange(value);
-		}}
 	>
 		<CalendarIcon />
 		{value ? df.format(value.toDate(getLocalTimeZone())) : 'Pick a date'}

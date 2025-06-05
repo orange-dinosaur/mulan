@@ -1,6 +1,8 @@
 /* TODO: define possible values for readingStatus field */
 
 import { PUBLIC_DEFAULT_BOOK_COVER } from '$env/static/public';
+import { CalendarDate, parseDate } from '@internationalized/date';
+import type { Calendar } from 'bits-ui';
 
 export class UserBooks {
 	userId: string;
@@ -456,8 +458,8 @@ export class BookToSave {
 	bookId: string;
 	userId: string;
 	readingStatus: string;
-	/* readingStartDate: Date;
-	readingEndDate: Date; */
+	readingStartDate: CalendarDate;
+	readingEndDate: CalendarDate;
 	bookType: string;
 	tags: string[];
 	rating: number;
@@ -479,8 +481,8 @@ export class BookToSave {
 		this.bookId = '';
 		this.userId = '';
 		this.readingStatus = '';
-		/* this.readingStartDate = new Date(Date.UTC(0, 0, 0));
-		this.readingEndDate = new Date(Date.UTC(0, 0, 0)); */
+		this.readingStartDate = new CalendarDate(1899, 12, 31);
+		this.readingEndDate = new CalendarDate(1899, 12, 31);
 		this.bookType = '';
 		this.tags = [];
 		this.rating = 0;
@@ -500,13 +502,13 @@ export class BookToSave {
 				this.readingStatus = (obj.readingStatus as string).toString();
 			}
 
-			/* if ('readingStartDate' in obj) {
-				this.readingStartDate = new Date(obj.readingStartDate as string);
+			if ('readingStartDate' in obj && obj.readingStartDate !== '') {
+				this.readingStartDate = parseDate(obj.readingStartDate as string) as CalendarDate;
 			}
 
-			if ('readingEndDate' in obj) {
-				this.readingEndDate = new Date(obj.readingEndDate as string);
-			} */
+			if ('readingEndDate' in obj && obj.readingEndDate !== '') {
+				this.readingEndDate = parseDate(obj.readingEndDate as string) as CalendarDate;
+			}
 
 			if ('bookType' in obj) {
 				this.bookType = (obj.bookType as string).toString();
@@ -535,8 +537,8 @@ export class BookToSave {
 			bookId: this.bookId,
 			userId: this.userId,
 			readingStatus: this.readingStatus,
-			/* readingStartDate: this.readingStartDate,
-			readingEndDate: this.readingEndDate, */
+			readingStartDate: this.readingStartDate.toString(),
+			readingEndDate: this.readingEndDate.toString(),
 			bookType: this.bookType,
 			tags: this.tags,
 			rating: this.rating,
@@ -548,8 +550,8 @@ export class BookToSave {
 
 export class BookToUpdate {
 	readingStatus?: string;
-	readingStartDate?: Date;
-	readingEndDate?: Date;
+	readingStartDate?: CalendarDate;
+	readingEndDate?: CalendarDate;
 	bookType?: string;
 	tags?: string[];
 	rating?: number;
@@ -571,12 +573,12 @@ export class BookToUpdate {
 				this.readingStatus = (obj.readingStatus as string).toString();
 			}
 
-			if ('readingStartDate' in obj && obj.readingStartDate != undefined) {
-				this.readingStartDate = new Date(obj.readingStartDate as string);
+			if ('readingStartDate' in obj && obj.readingStartDate != undefined && obj.readingStartDate !== '') {
+				this.readingStartDate = parseDate(obj.readingStartDate as string) as CalendarDate;
 			}
 
-			if ('readingEndDate' in obj && obj.readingEndDate != undefined) {
-				this.readingEndDate = new Date(obj.readingEndDate as string);
+			if ('readingEndDate' in obj && obj.readingEndDate != undefined && obj.readingEndDate !== '') {
+				this.readingEndDate = parseDate(obj.readingEndDate as string) as CalendarDate;
 			}
 
 			if ('bookType' in obj && obj.bookType != undefined) {
