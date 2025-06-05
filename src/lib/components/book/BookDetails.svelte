@@ -296,17 +296,12 @@
 		});
 		const bookToUpdateJSON = bookToUpdate.toJSON();
 
-		console.log('readingStartDateStr', readingStartDateStr);
-		console.log('readingEndDateStr', readingEndDateStr);
-
 		if (readingStartDateStr !== '') {
 			bookToUpdateJSON.readingStartDate = readingStartDateStr;
 		}
 		if (readingEndDateStr !== '') {
 			bookToUpdateJSON.readingEndDate = readingEndDateStr;
 		}
-
-		console.log('bookToUpdateJSON', bookToUpdateJSON);
 
 		isLoadingUpdate = true;
 
