@@ -14,7 +14,7 @@
 	<div class="mb-8 flex flex-col">
 		<h1>USER: {user.$id}</h1>
 		<h1>USERNAME: {user.name}</h1>
-		<h1>ENAMIL: {user.email}</h1>
+		<h1>EMAIL: {user.email}</h1>
 	</div>
 
 	<div class="flex flex-col">
