@@ -71,8 +71,8 @@
 			bookType: isBookAlredySaved ? book.bookType : '',
 			tags: isBookAlredySaved ? book.tags : [],
 			rating: isBookAlredySaved ? book.rating : 0,
-			readingStartDate: new CalendarDate(1992, 6, 8),
-			readingEndDate: new CalendarDate(1992, 6, 8)
+			readingStartDate: new CalendarDate(1899, 12, 31),
+			readingEndDate: new CalendarDate(1899, 12, 31)
 		};
 	}
 	let initialValues = defineInitialValues();
@@ -269,7 +269,7 @@
 
 	// update the book in the user's library
 	async function updateBookInLibrary() {
-		const readingStartDateStr = readingStartDate
+		/* const readingStartDateStr = readingStartDate
 			? readingStartDate?.compare(new CalendarDate(1970, 1, 1)) === 0 ||
 				readingStartDate?.compare(new CalendarDate(1899, 12, 31)) === 0
 				? ''
@@ -281,7 +281,7 @@
 				readingEndDate?.compare(new CalendarDate(1899, 12, 31)) === 0
 				? ''
 				: readingEndDate.toString()
-			: '';
+			: ''; */
 
 		// create a book to update object setting only the fields that have changed
 		const bookToUpdate = new BookToUpdate({
@@ -296,11 +296,28 @@
 		});
 		const bookToUpdateJSON = bookToUpdate.toJSON();
 
-		if (readingStartDateStr !== '') {
-			bookToUpdateJSON.readingStartDate = readingStartDateStr;
+		if (readingStartDate) {
+			if (
+				!(readingStartDate?.compare(new CalendarDate(1970, 1, 1)) === 0) &&
+				!(readingStartDate?.compare(new CalendarDate(1899, 12, 31)) === 0) &&
+				!(readingStartDate?.compare(new CalendarDate(0, 0, 0)) === 0)
+			) {
+				bookToUpdateJSON.readingStartDate = readingStartDate.toString();
+			} else if (readingStartDate?.compare(new CalendarDate(0, 0, 0)) === 0) {
+				bookToUpdateJSON.readingStartDate = '1899-12-31';
+			}
 		}
-		if (readingEndDateStr !== '') {
-			bookToUpdateJSON.readingEndDate = readingEndDateStr;
+
+		if (readingEndDate) {
+			if (
+				!(readingEndDate?.compare(new CalendarDate(1970, 1, 1)) === 0) &&
+				!(readingEndDate?.compare(new CalendarDate(1899, 12, 31)) === 0) &&
+				!(readingEndDate?.compare(new CalendarDate(0, 0, 0)) === 0)
+			) {
+				bookToUpdateJSON.readingEndDate = readingEndDate.toString();
+			} else if (readingEndDate?.compare(new CalendarDate(0, 0, 0)) === 0) {
+				bookToUpdateJSON.readingEndDate = '1899-12-31';
+			}
 		}
 
 		isLoadingUpdate = true;
