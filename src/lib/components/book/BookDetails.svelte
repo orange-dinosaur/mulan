@@ -269,20 +269,6 @@
 
 	// update the book in the user's library
 	async function updateBookInLibrary() {
-		/* const readingStartDateStr = readingStartDate
-			? readingStartDate?.compare(new CalendarDate(1970, 1, 1)) === 0 ||
-				readingStartDate?.compare(new CalendarDate(1899, 12, 31)) === 0
-				? ''
-				: readingStartDate.toString()
-			: '';
-
-		const readingEndDateStr = readingEndDate
-			? readingEndDate?.compare(new CalendarDate(1970, 1, 1)) === 0 ||
-				readingEndDate?.compare(new CalendarDate(1899, 12, 31)) === 0
-				? ''
-				: readingEndDate.toString()
-			: ''; */
-
 		// create a book to update object setting only the fields that have changed
 		const bookToUpdate = new BookToUpdate({
 			readingStatus: isReadingStatusChanged ? readingStatus : undefined,
@@ -479,68 +465,15 @@
 					<!-- Book Cover -->
 					<img src={book.cover} alt={book.title} class="mb-8 h-60 w-auto" />
 
-					<!-- Actions -->
-					<div class="ml-8 flex h-60 flex-col justify-end">
-						{#if isBookAlredySaved}
-							<!-- Update book -->
-							<Button
-								class="mb-2"
-								disabled={!isBookChanged() ||
-									isLoadingUpdate ||
-									isLoadingRemove ||
-									isLoadingWhishlist}
-								onclick={updateBookInLibrary}
-								>{#if isLoadingUpdate}
-									<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
-								{/if}
-								Update Book
-							</Button>
-
-							<!-- Delete book -->
-							<Button
-								class="mb-2"
-								disabled={isLoadingUpdate || isLoadingRemove || isLoadingWhishlist}
-								onclick={removeBookFromLibrary}
-								variant="destructive"
-							>
-								{#if isLoadingRemove}
-									<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
-								{/if}
-								Remove from library
-							</Button>
-						{:else}
-							<!-- Save book -->
-							<Button
-								class="mb-2"
-								disabled={isLoadingSave || isLoadingWishlist}
-								onclick={saveBookToLibrary}
-								>{#if isLoadingSave}
-									<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
-								{/if}
-								Add to library
-							</Button>
-						{/if}
-
-						<!-- TODO: Create function -->
-						<!-- <Button variant="outline" disabled={isLoadingSave || isLoadingWishlist}
-							>{#if isLoadingWishlist}
-								<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+					<Sheet.Description class="ml-8 flex w-4/5 flex-col justify-start">
+						<!-- Book Title -->
+						<div class="flex items-center">
+							<Sheet.Title>{book.title}</Sheet.Title>
+							{#if isBookAlredySaved && displayMode === 'search'}
+								<BookCheck class="w-h-5 ml-2 h-5 text-primary" />
 							{/if}
-							Save to whishlist
-						</Button> -->
-					</div>
-				</div>
+						</div>
 
-				<Sheet.Header>
-					<!-- Book Title -->
-					<div class="flex items-center">
-						<Sheet.Title>{book.title}</Sheet.Title>
-						{#if isBookAlredySaved && displayMode === 'search'}
-							<BookCheck class="w-h-5 ml-2 h-5 text-primary" />
-						{/if}
-					</div>
-
-					<Sheet.Description>
 						<!-- Book Authors and Publishing info -->
 						<p class="text-base text-muted-foreground">{book.authors}</p>
 						<div class="mb-4 mt-2 flex">
@@ -571,54 +504,103 @@
 								</p>
 							</div>
 						</div>
-
-						<!-- Book Description -->
-						<ScrollArea class="mt-6 h-28 min-h-28 w-full text-sm text-muted-foreground"
-							>{book.description}</ScrollArea
-						>
 					</Sheet.Description>
+				</div>
+
+				<Sheet.Header>
+					<div class="mb-8 flex w-[360px] flex-col justify-start">
+						<!-- Reading Status -->
+						<div class="mt-1 flex items-center justify-between">
+							<p class="text-sm font-semibold text-muted-foreground">Reading status:</p>
+							<SingleSelection
+								possibleSelections={readingStatusSelection}
+								selection={readingStatus}
+								onSelectionChange={handleReadingStatusChange}
+							/>
+						</div>
+
+						<!-- Book Type -->
+						<div class="mb-1 mt-1 flex items-center justify-between">
+							<p class="text-sm font-semibold text-muted-foreground">Book type:</p>
+							<SingleSelection
+								possibleSelections={bookTypeSelection}
+								selection={bookType}
+								onSelectionChange={handleBookTypeChange}
+							/>
+						</div>
+
+						<!-- Reading Dates -->
+						<div class="mb-1 mt-1 flex items-center justify-between">
+							<p class="text-sm font-semibold text-muted-foreground">Reading start date:</p>
+							<DatePicker date={readingStartDate} onDateChange={handleReadingStartDateChange} />
+						</div>
+						<div class="mb-4 mt-1 flex items-center justify-between">
+							<p class="text-sm font-semibold text-muted-foreground">Reading end date:</p>
+							<DatePicker date={readingEndDate} onDateChange={handleReadingEndDateChange} />
+						</div>
+
+						<!-- Rating -->
+						<div class="my-4 flex">
+							<!-- <StarRating /> -->
+							<StarRating {rating} onRatingChange={handleRatingChange} stars="5" />
+						</div>
+
+						<!-- Tags -->
+						<div class="mb-8 mt-4 flex">
+							<Tags {tags} onTagsChange={handleTagsChange} />
+						</div>
+
+						<!-- Actions -->
+						<div class="flex">
+							{#if isBookAlredySaved}
+								<!-- Update book -->
+								<Button
+									class="mr-2 text-xs"
+									disabled={!isBookChanged() ||
+										isLoadingUpdate ||
+										isLoadingRemove ||
+										isLoadingWhishlist}
+									onclick={updateBookInLibrary}
+									>{#if isLoadingUpdate}
+										<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+									{/if}
+									Update book
+								</Button>
+
+								<!-- Delete book -->
+								<Button
+									class="text-xs"
+									disabled={isLoadingUpdate || isLoadingRemove || isLoadingWhishlist}
+									onclick={removeBookFromLibrary}
+									variant="destructive"
+								>
+									{#if isLoadingRemove}
+										<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+									{/if}
+									Delete book
+								</Button>
+							{:else}
+								<!-- Save book -->
+								<Button
+									class="text-xs"
+									disabled={isLoadingSave || isLoadingWishlist}
+									onclick={saveBookToLibrary}
+									>{#if isLoadingSave}
+										<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+									{/if}
+									Add book
+								</Button>
+							{/if}
+						</div>
+					</div>
+
+					<!-- Book Description -->
+					<ScrollArea class="mt-6 h-48 min-h-48 w-full text-sm text-muted-foreground"
+						>{book.description}</ScrollArea
+					>
 				</Sheet.Header>
 
-				<div class="mt-6 flex flex-col border-t-2 border-primary">
-					<!-- Reading Status -->
-					<div class="mt-6 flex items-center">
-						<p class="mr-2 text-sm font-semibold text-muted-foreground">Reading status:</p>
-						<SingleSelection
-							possibleSelections={readingStatusSelection}
-							selection={readingStatus}
-							onSelectionChange={handleReadingStatusChange}
-						/>
-					</div>
-
-					<!-- Book Type -->
-					<div class="mb-1 mt-1 flex items-center">
-						<p class="mr-2 text-sm font-semibold text-muted-foreground">Book type:</p>
-						<SingleSelection
-							possibleSelections={bookTypeSelection}
-							selection={bookType}
-							onSelectionChange={handleBookTypeChange}
-						/>
-					</div>
-
-					<!-- Reading Dates -->
-					<div class="mb-1 mt-1 flex items-center">
-						<p class="mr-2 text-sm font-semibold text-muted-foreground">Reading start date:</p>
-						<DatePicker date={readingStartDate} onDateChange={handleReadingStartDateChange} />
-					</div>
-					<div class="mb-4 mt-1 flex items-center">
-						<p class="mr-2 text-sm font-semibold text-muted-foreground">Reading end date:</p>
-						<DatePicker date={readingEndDate} onDateChange={handleReadingEndDateChange} />
-					</div>
-
-					<!-- Tags -->
-					<Tags {tags} onTagsChange={handleTagsChange} />
-
-					<!-- Rating -->
-					<div class="mt-6 flex">
-						<!-- <StarRating /> -->
-						<StarRating {rating} onRatingChange={handleRatingChange} stars="5" />
-					</div>
-				</div>
+				<div class="mt-6 flex flex-col border-t-2 border-primary"></div>
 			</ScrollArea>
 		</Sheet.Content>
 	</Sheet.Root>

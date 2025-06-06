@@ -194,5 +194,7 @@
 		>
 			x
 		</div>
+	{:else}
+		<div class="w-2 rounded-md text-sm font-semibold text-primary hover:bg-primary/10"></div>
 	{/if}
 </div>
