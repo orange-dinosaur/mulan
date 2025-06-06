@@ -51,8 +51,14 @@
 				? 'comment-stars-view'
 				: 'comment-stars-view is-half'}
 			for="rating-{(roundedStars * 2 - star) / 2}"
-			><svg
+		>
+			<!-- svelte-ignore a11y_no_static_element_interactions -->
+			<svg
 				class={((roundedStars * 2 - star) / 2) % 1 === 0 ? 'icon icon-star' : 'icon icon-star-half'}
+				ondblclick={() => {
+					selectedRating = 0;
+					handleRatingChange(selectedRating as number);
+				}}
 			>
 				<use
 					xlink:href={((roundedStars * 2 - star) / 2) % 1 === 0 ? '#icon-star' : '#icon-star-half'}
